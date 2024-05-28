@@ -10,6 +10,7 @@ import json
 import os
 
 logger = logging.getLogger(__name__)
+logger.basicConfig(level=logging.INFO)
 
 logger.info("🔥 [R2BucketUpload] Loaded")
 
