@@ -27,7 +27,8 @@ class R2BucketUpload(scripts.Script):
         return "R2 Bucket upload"
 
     def show(self, is_img2img):
-        return not is_img2img
+        #return not is_img2img
+        return True
 
     def process(self, p: StableDiffusionProcessing, processed: Processed, *args):
 
