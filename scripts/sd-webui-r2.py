@@ -130,6 +130,11 @@ def format_slack_message(
 
     blocks ={
 	"blocks": [
+        {
+            "type": "image",
+            "image_url": image_url,
+            "alt_text": "delicious tacos"
+        },
 		{
 			"type": "rich_text",
 			"elements": [
@@ -150,11 +155,7 @@ def format_slack_message(
 						}
 					]
 				},
-                {
-			        "type": "image",
-                    "image_url": image_url,
-                    "alt_text": "delicious tacos"
-                },
+                
 				{
 					"type": "rich_text_section",
 					"elements": [
