@@ -1,5 +1,5 @@
-
-from modules import scripts, script_callbacks, shared
+from modules.processing import Processed, StableDiffusionProcessing
+from modules import scripts, shared
 from r2client.R2Client import R2Client
 from modules.shared import opts
 from typing import Optional
@@ -30,53 +30,52 @@ class R2BucketUpload(scripts.Script):
     def show(self, is_img2img):
         return not is_img2img
 
-    def postprocess_image(self, p, pp: scripts.PostprocessImageArgs, *args):  #
-        print("⚡ [R2BucketUpload] Starting post processing ..")
+    def finalprocess(self, p: StableDiffusionProcessing, processed: Processed, *args):
+        if self.enabled:
+            print("⚡ [R2BucketUpload] Starting post processing ..")
 
-        slack_webhook_url = opts.slack_webhook_url
+            slack_webhook_url = opts.slack_webhook_url
 
-        data = p.js()
+            data = p.js()
 
-        logger.debug(f"⚡ [R2BucketUpload] JSON data: {data}")
+            logger.debug(f"⚡ [R2BucketUpload] JSON data: {data}")
 
-        if p.images:
-    
-            output_file_path = p.images[0]  # Path to the output image
-            file_hash = self.generate_sha256_file(output_file_path)
-            output_json_path = os.path.join(os.path.dirname(output_file_path), f"{file_hash}.json")
-            
-            with open(output_json_path, 'w') as json_file:
-                json.dump(data, json_file)
-            
-            
-            
-            logger.info(f"🔄 [R2BucketUpload] Uploading json {output_json_path} to R2")
-            prompt_url = self.upload_to_r2(output_json_path)
-            
-            # Clean up
-            os.remove(output_json_path)
+            if p.images:
+        
+                output_file_path = p.images[0]  # Path to the output image
+                file_hash = self.generate_sha256_file(output_file_path)
+                output_json_path = os.path.join(os.path.dirname(output_file_path), f"{file_hash}.json")
+                
+                with open(output_json_path, 'w') as json_file:
+                    json.dump(data, json_file)
+                
+                logger.info(f"🔄 [R2BucketUpload] Uploading json {output_json_path} to R2")
+                prompt_url = self.upload_to_r2(output_json_path)
+                
+                # Clean up
+                os.remove(output_json_path)
 
-            img_url = ""
-            for image in p.images:
+                img_url = ""
+                for image in p.images:
 
-                logger.info(f"🔄 [R2BucketUpload] Uploading image {image} to R2")
-                url = self.upload_to_r2(image, file_name=f"{file_hash}.png")
-                img_url += url + "\n"
+                    logger.info(f"🔄 [R2BucketUpload] Uploading image {image} to R2")
+                    url = self.upload_to_r2(image, file_name=f"{file_hash}.png")
+                    img_url += url + "\n"
 
-            if slack_webhook_url:
-                logger.info("🚀 Sending slack message")
-                payload = self.format_slack_message(
-                    img_url,
-                    prompt_url,
-                    data.get('prompt'),
-                    data.get('negative_prompt'),
-                    data.get('sd_model_name')
-                )
-                self.send_slack_message(payload, webhook_url=slack_webhook_url)
+                if slack_webhook_url:
+                    logger.info("🚀 Sending slack message")
+                    payload = self.format_slack_message(
+                        img_url,
+                        prompt_url,
+                        data.get('prompt'),
+                        data.get('negative_prompt'),
+                        data.get('sd_model_name')
+                    )
+                    self.send_slack_message(payload, webhook_url=slack_webhook_url)
 
-            logger.info("✅ [R2BucketUpload] Successfully uploaded to R2")
-        else:
-            logger.error("❌ [R2BucketUpload] No images found in processed data")
+                logger.info("✅ [R2BucketUpload] Successfully uploaded to R2")
+            else:
+                logger.error("❌ [R2BucketUpload] No images found in processed data")
 
     def upload_to_r2(self, file_path, file_name: Optional[str] = None):
         file_name = file_name or os.path.basename(file_path)
