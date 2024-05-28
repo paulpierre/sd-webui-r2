@@ -126,7 +126,6 @@ def format_slack_message(
     prompt_url: str,
     prompt: str,
     negative_prompt: str,
-    reference_img: str,
     model: str
 ) -> dict:
 
@@ -144,16 +143,6 @@ def format_slack_message(
             "style": {"bold": True},
         },
     ]
-
-    if reference_img:
-        link_blocks.append(
-            {
-                "type": "link",
-                "url": reference_img,
-                "text": "🔍 Controlnet reference",
-                "style": {"bold": True},
-            }
-        )
 
     prompt_section = {
         "type": "rich_text_quote",
@@ -176,7 +165,6 @@ def format_slack_message(
         ]
     }
     return blocks
-
 
 
 def send_slack_message(payload: dict, webhook_url: Optional[str] = None):
