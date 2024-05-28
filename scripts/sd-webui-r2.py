@@ -11,15 +11,19 @@ import os
 
 print("🔥 [R2BucketUpload] Loaded")
 
-shared.opts.add_option("r2_access_key_id", shared.OptionInfo("", "R2 Access Key ID", section=("r2", "R2 Settings")))
-shared.opts.add_option("r2_secret_access_key", shared.OptionInfo("", "R2 Secret Access Key", section=("r2", "R2 Settings")))
-shared.opts.add_option("r2_upload_path", shared.OptionInfo("assets", "R2 Upload Path", section=("r2", "R2 Settings")))
-shared.opts.add_option("local_upload_path", shared.OptionInfo("output", "Local Upload Path", section=("r2", "R2 Settings")))
-shared.opts.add_option("r2_endpoint", shared.OptionInfo("", "R2 Endpoint", section=("r2", "R2 Settings")))
-shared.opts.add_option("r2_bucket_name", shared.OptionInfo("", "R2 Bucket Name", section=("r2", "R2 Settings")))
-shared.opts.add_option("r2_domain", shared.OptionInfo("", "R2 Domain", section=("r2", "R2 Settings")))
-shared.opts.add_option("slack_webhook_url", shared.OptionInfo("", "Slack Webhook URL", section=("r2", "R2 Settings")))
+# Add options for R2 configuration
+def on_ui_settings():
+    section = ("r2", "R2 Settings")
+    shared.opts.add_option("r2_access_key_id", shared.OptionInfo("", "R2 Access Key ID", section=section))
+    shared.opts.add_option("r2_secret_access_key", shared.OptionInfo("", "R2 Secret Access Key", section=section))
+    shared.opts.add_option("r2_upload_path", shared.OptionInfo("assets", "R2 Upload Path", section=section))
+    shared.opts.add_option("local_upload_path", shared.OptionInfo("output", "Local Upload Path", section=section))
+    shared.opts.add_option("r2_endpoint", shared.OptionInfo("", "R2 Endpoint", section=section))
+    shared.opts.add_option("r2_bucket_name", shared.OptionInfo("", "R2 Bucket Name", section=section))
+    shared.opts.add_option("r2_domain", shared.OptionInfo("", "R2 Domain", section=section))
+    shared.opts.add_option("slack_webhook_url", shared.OptionInfo("", "Slack Webhook URL", section=section))
 
+script_callbacks.on_ui_settings(on_ui_settings)
 
 class R2BucketUpload(scripts.Script):
 
@@ -186,3 +190,5 @@ class R2BucketUpload(scripts.Script):
         result = requests.post(webhook_url, json=payload)
         print(f"💬 [R2BucketUpload] Slack response: {result.text}")
         return result
+    
+script_callbacks.on_script_loading(R2BucketUpload)
