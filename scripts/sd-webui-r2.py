@@ -187,8 +187,3 @@ class R2BucketUpload(scripts.Script):
         result = requests.post(webhook_url, json=payload)
         logger.debug(f"💬 [R2BucketUpload] Slack response: {result.text}")
         return result
-
-
-    @script_callbacks.on_ui_tabs
-    def on_ui_tabs():
-        return R2BucketUpload()
