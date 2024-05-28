@@ -189,6 +189,6 @@ class R2BucketUpload(scripts.Script):
         return result
 
 
-    @script_callbacks.on_ui_tabs
-    def on_ui_tabs():
-        return [R2BucketUpload()]
+    # @script_callbacks.on_ui_tabs
+    # def on_ui_tabs():
+    #     return [R2BucketUpload()]
