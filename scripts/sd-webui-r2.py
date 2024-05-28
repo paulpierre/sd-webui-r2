@@ -1,4 +1,4 @@
-from modules.processing import StableDiffusionProcessing
+
 from modules import scripts, script_callbacks, shared
 from r2client.R2Client import R2Client
 from modules.shared import opts
@@ -30,8 +30,8 @@ class R2BucketUpload(scripts.Script):
     def show(self, is_img2img):
         return not is_img2img
 
-    def postprocess(self, p: StableDiffusionProcessing, processed, *args, **kwargs):  #
-        logger.info("⚡ [R2BucketUpload] Starting post processing ..")
+    def postprocess_image(self, p, pp: scripts.PostprocessImageArgs, *args):  #
+        print("⚡ [R2BucketUpload] Starting post processing ..")
 
         slack_webhook_url = opts.slack_webhook_url
 
@@ -39,7 +39,7 @@ class R2BucketUpload(scripts.Script):
 
         logger.debug(f"⚡ [R2BucketUpload] JSON data: {data}")
 
-        if processed.images:
+        if p.images:
     
             output_file_path = p.images[0]  # Path to the output image
             file_hash = self.generate_sha256_file(output_file_path)
@@ -57,7 +57,7 @@ class R2BucketUpload(scripts.Script):
             os.remove(output_json_path)
 
             img_url = ""
-            for image in processed.images:
+            for image in p.images:
 
                 logger.info(f"🔄 [R2BucketUpload] Uploading image {image} to R2")
                 url = self.upload_to_r2(image, file_name=f"{file_hash}.png")
@@ -189,6 +189,6 @@ class R2BucketUpload(scripts.Script):
         return result
 
 
-    # @script_callbacks.on_ui_tabs
-    # def on_ui_tabs():
-    #     return [R2BucketUpload()]
+    @script_callbacks.on_ui_tabs
+    def on_ui_tabs():
+        return R2BucketUpload()
