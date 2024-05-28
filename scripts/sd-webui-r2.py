@@ -79,7 +79,7 @@ def postprocess(params:script_callbacks.ImageSaveParams, *args):
     logger.info("✅ [R2BucketUpload] Successfully uploaded to R2")
 
 
-def upload_to_r2(self, file_path, file_name: Optional[str] = None):
+def upload_to_r2(file_path, file_name: Optional[str] = None):
     file_name = file_name or os.path.basename(file_path)
 
     bucket_name = opts.r2_bucket_name or os.environ["R2_BUCKET_NAME"]
@@ -107,7 +107,7 @@ def upload_to_r2(self, file_path, file_name: Optional[str] = None):
 
     return url
 
-def generate_sha256_file(self, file_path):
+def generate_sha256_file(file_path):
     """
     Generate a SHA256 hash of a file.
 
@@ -122,7 +122,6 @@ def generate_sha256_file(self, file_path):
     return sha256_hash.hexdigest()
     
 def format_slack_message(
-    self,
     image_url: str,
     prompt_url: str,
     prompt: str,
@@ -180,7 +179,7 @@ def format_slack_message(
 
 
 
-def send_slack_message(self, payload: dict, webhook_url: Optional[str] = None):
+def send_slack_message(payload: dict, webhook_url: Optional[str] = None):
     webhook_url = webhook_url or opts.slack_webhook_url or os.environ["SLACK_WEBHOOK_URL"]
     if webhook_url is None:
         raise ValueError("Webhook URL is required to send a Slack message.")
