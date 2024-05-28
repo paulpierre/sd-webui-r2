@@ -1,13 +1,13 @@
 # 🌩️ sd-webui-r2
 
 <div align="center">
-Your own portal gun for your generated images.
+A portal gun for your Stable Diffusion WebUI generated images
 
 <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDBzZGF2azBnZ2F0YzJqbzBodWc5enZhaDM1YmFqZnQ1cnZmOG9mZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oriNTivEJZ1ASRnMc/giphy.gif" width="300" /></div>
 
-Wish your instance of Stable Diffusion WebUI behaved more like Midjourney? You've found the right repo. sd-webui-2 is an extension that leverages callbacks to automatically upload generated images and configuration metadata as JSON to Cloudflare's R2 bucket storage.
+Wish your instance of Stable Diffusion WebUI behaved more like Midjourney?
 
-As a bonus, it also provides an optional feature to post the uploaded data to a custom Slack webhook for easy sharing and collaboration.
+You've found the right repo. sd-webui-2 is an extension that leverages sd webui callbacks to automatically upload generated images and configuration metadata as JSON to Cloudflare's R2 bucket storage. As a bonus, it also provides an optional feature to post the uploaded data to a custom Slack webhook for easy sharing and collaboration.
 
 ## 🚀 Features
 
