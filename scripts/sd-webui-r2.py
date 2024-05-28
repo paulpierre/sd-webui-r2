@@ -128,41 +128,53 @@ def format_slack_message(
     model: str
 ) -> dict:
 
-    link_blocks = [
-        {
-            "type": "link",
-            "url": image_url,
-            "text": "📷 Photo link ",
-            "style": {"bold": True},
-        },
-        {
-            "type": "link",
-            "url": prompt_url,
-            "text": "📝 Prompt JSON ",
-            "style": {"bold": True},
-        },
-    ]
-
-    prompt_section = {
-        "type": "rich_text_quote",
-        "elements": [
-            {"type": "text", "text": f"🧠 Model: {model}"},
-            {"type": "text", "text": f"📄 Prompt: {prompt}"},
-            {"type": "text", "text": f"🚫 Negative Prompt: {negative_prompt}"} if negative_prompt else {},
-        ],
-    } if prompt else {}
-
-    blocks = {
-        "blocks": [
-            {
-                "type": "rich_text",
-                "elements": [
-                    prompt_section,
-                    {"type": "rich_text_section", "elements": link_blocks},
-                ],
-            },
-        ]
-    }
+    blocks ={
+	"blocks": [
+		{
+			"type": "rich_text",
+			"elements": [
+				{
+					"type": "rich_text_section",
+					"elements": [
+						{
+							"type": "text",
+							"text": f"🧠 Model: {model}"
+						},
+						{
+							"type": "text",
+							"text": f"\n📄 Prompt: {prompt}"
+						},
+						{
+							"type": "text",
+							"text": f"\n🚫 Negative Prompt: {negative_prompt}"
+						}
+					]
+				},
+				{
+					"type": "rich_text_section",
+					"elements": [
+						{
+							"type": "link",
+							"url": image_url,
+							"text": "\n📷 Photo link ",
+							"style": {
+								"bold": True
+							}
+						},
+						{
+							"type": "link",
+							"url": prompt_url,
+							"text": "📝 Prompt JSON ",
+							"style": {
+								"bold": True
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
     return blocks
 
 
