@@ -47,7 +47,7 @@ def postprocess(params:script_callbacks.ImageSaveParams, *args):
 
     logger.info(f"⚡ [R2BucketUpload] JSON data: {data}")
 
-    output_file_path = p.filename  # Path to the output image
+    output_file_path = params.filename  # Path to the output image
     file_hash = generate_sha256_file(output_file_path)
     output_json_path = os.path.join(os.path.dirname(output_file_path), f"{file_hash}.json")
     
