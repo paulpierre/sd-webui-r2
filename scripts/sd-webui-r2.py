@@ -52,7 +52,7 @@ def postprocess(params:script_callbacks.ImageSaveParams, *args):
     output_json_path = os.path.join(os.path.dirname(output_file_path), f"{file_hash}.json")
     
     with open(output_json_path, 'w') as json_file:
-        json.dump(data, json_file)
+        json.dump(data, json_file, default=str)
     
     logger.info(f"🔄 [R2BucketUpload] Uploading json {output_json_path} to R2")
     prompt_url = upload_to_r2(output_json_path)
