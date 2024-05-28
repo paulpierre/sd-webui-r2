@@ -12,7 +12,6 @@ import os
 
 logger = logging.getLogger(__name__)
 
-shared.opts.add_section("r2", "🌩️ R2BucketUpload Settings", section=("r2", "R2 Settings"))
 shared.opts.add_option("r2_access_key_id", shared.OptionInfo("", "R2 Access Key ID", section=("r2", "R2 Settings")))
 shared.opts.add_option("r2_secret_access_key", shared.OptionInfo("", "R2 Secret Access Key", section=("r2", "R2 Settings")))
 shared.opts.add_option("r2_upload_path", shared.OptionInfo("assets", "R2 Upload Path", section=("r2", "R2 Settings")))
