@@ -31,8 +31,7 @@ class R2BucketUpload(scripts.Script):
         return "R2 Bucket upload"
 
     def show(self, is_img2img):
-        #return not is_img2img
-        return True
+        return scripts.AlwaysVisible
 
     def process(self, p: StableDiffusionProcessing, processed: Processed, *args):
 
@@ -191,4 +190,4 @@ class R2BucketUpload(scripts.Script):
         print(f"💬 [R2BucketUpload] Slack response: {result.text}")
         return result
     
-script_callbacks.on_script_loading(R2BucketUpload)
+script_callbacks.on_after_process(R2BucketUpload)
