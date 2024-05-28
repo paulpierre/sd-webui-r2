@@ -43,7 +43,7 @@ def postprocess(params:script_callbacks.ImageSaveParams, *args):
     
     p = params.p
 
-    data = p.js()
+    data = p.__dict__
 
     logger.info(f"⚡ [R2BucketUpload] JSON data: {data}")
 
