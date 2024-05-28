@@ -9,7 +9,9 @@ import hashlib
 import json
 import os
 
-print("🔥 [R2BucketUpload] Loaded")
+logger = logging.getLogger(__name__)
+
+logger.info("🔥 [R2BucketUpload] Loaded")
 
 # Add options for R2 configuration
 def on_ui_settings():
@@ -35,13 +37,13 @@ class R2BucketUpload(scripts.Script):
 
     def process(self, p: StableDiffusionProcessing, processed: Processed, *args):
 
-        print("⚡ [R2BucketUpload] Starting post processing ..")
+        logger.info("⚡ [R2BucketUpload] Starting post processing ..")
 
         slack_webhook_url = opts.slack_webhook_url
 
         data = p.js()
 
-        print(f"⚡ [R2BucketUpload] JSON data: {data}")
+        logger.info(f"⚡ [R2BucketUpload] JSON data: {data}")
 
         if p.images:
     
@@ -52,7 +54,7 @@ class R2BucketUpload(scripts.Script):
             with open(output_json_path, 'w') as json_file:
                 json.dump(data, json_file)
             
-            print(f"🔄 [R2BucketUpload] Uploading json {output_json_path} to R2")
+            logger.info(f"🔄 [R2BucketUpload] Uploading json {output_json_path} to R2")
             prompt_url = self.upload_to_r2(output_json_path)
             
             # Clean up
@@ -61,12 +63,12 @@ class R2BucketUpload(scripts.Script):
             img_url = ""
             for image in p.images:
 
-                print(f"🔄 [R2BucketUpload] Uploading image {image} to R2")
+                logger.info(f"🔄 [R2BucketUpload] Uploading image {image} to R2")
                 url = self.upload_to_r2(image, file_name=f"{file_hash}.png")
                 img_url += url + "\n"
 
             if slack_webhook_url:
-                print("🚀 Sending slack message")
+                logger.info("🚀 Sending slack message")
                 payload = self.format_slack_message(
                     img_url,
                     prompt_url,
@@ -76,7 +78,7 @@ class R2BucketUpload(scripts.Script):
                 )
                 self.send_slack_message(payload, webhook_url=slack_webhook_url)
 
-            print("✅ [R2BucketUpload] Successfully uploaded to R2")
+            logger.info("✅ [R2BucketUpload] Successfully uploaded to R2")
         else:
             logger.error("❌ [R2BucketUpload] No images found in processed data")
 
@@ -97,7 +99,7 @@ class R2BucketUpload(scripts.Script):
         )
 
         upload_path = f"{base_upload_path}/{file_name}"
-        print(f"🔄 [R2BucketUpload] Uploading file to R2 - bucket_name:{bucket_name} file_path:{file_path} upload_path:{upload_path}")
+        logger.info(f"🔄 [R2BucketUpload] Uploading file to R2 - bucket_name:{bucket_name} file_path:{file_path} upload_path:{upload_path}")
         try:
             r2.upload_file(bucket_name, file_path, upload_path)
         except Exception as e:
@@ -187,7 +189,7 @@ class R2BucketUpload(scripts.Script):
 
         # Send Slack notification
         result = requests.post(webhook_url, json=payload)
-        print(f"💬 [R2BucketUpload] Slack response: {result.text}")
+        logger.info(f"💬 [R2BucketUpload] Slack response: {result.text}")
         return result
     
-script_callbacks.on_image_saved(R2BucketUpload())
+script_callbacks.on_image_saved(R2BucketUpload().process)
