@@ -35,7 +35,7 @@ class R2BucketUpload(scripts.Script):
     def show(self, is_img2img):
         return scripts.AlwaysVisible
 
-    def process(self, p: StableDiffusionProcessing, processed: Processed, *args):
+    def postprocess(self, p: StableDiffusionProcessing, *args):
 
         logger.info("⚡ [R2BucketUpload] Starting post processing ..")
 
