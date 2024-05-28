@@ -190,4 +190,4 @@ class R2BucketUpload(scripts.Script):
         print(f"💬 [R2BucketUpload] Slack response: {result.text}")
         return result
     
-script_callbacks.on_image_saved(R2BucketUpload)
+script_callbacks.on_image_saved(R2BucketUpload())
