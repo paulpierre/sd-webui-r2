@@ -1,5 +1,5 @@
 from modules.processing import Processed, StableDiffusionProcessing
-from modules import scripts, shared
+from modules import scripts, shared, script_callbacks
 from r2client.R2Client import R2Client
 from modules.shared import opts
 from typing import Optional
