@@ -146,10 +146,15 @@ def format_slack_message(
 						},
 						{
 							"type": "text",
-							"text": f"\n🚫 Negative Prompt: {negative_prompt}"
+							"text": f"\n🚫 Negative Prompt: {negative_prompt}\n"
 						}
 					]
 				},
+                {
+			        "type": "image",
+                    "image_url": image_url,
+                    "alt_text": "delicious tacos"
+                },
 				{
 					"type": "rich_text_section",
 					"elements": [
