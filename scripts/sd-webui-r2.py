@@ -38,7 +38,7 @@ def postprocess(params:script_callbacks.ImageSaveParams, *args):
     print("⚡ [R2BucketUpload] Starting post processing ..")
 
     slack_webhook_url = opts.slack_webhook_url
-    
+
     p = params.p
 
     data = p.__dict__
@@ -48,13 +48,13 @@ def postprocess(params:script_callbacks.ImageSaveParams, *args):
     output_file_path = params.filename  # Path to the output image
     file_hash = generate_sha256_file(output_file_path)
     output_json_path = os.path.join(os.path.dirname(output_file_path), f"{file_hash}.json")
-    
+
     with open(output_json_path, 'w') as json_file:
         json.dump(data, json_file, default=str)
-    
+
     print(f"🔄 [R2BucketUpload] Uploading json {output_json_path} to R2")
     prompt_url = upload_to_r2(output_json_path)
-    
+
     # Clean up
     os.remove(output_json_path)
 
@@ -80,12 +80,12 @@ def postprocess(params:script_callbacks.ImageSaveParams, *args):
 def upload_to_r2(file_path, file_name: Optional[str] = None):
     file_name = file_name or os.path.basename(file_path)
 
-    bucket_name = opts.r2_bucket_name or os.environ["R2_BUCKET_NAME"]
-    base_upload_path = opts.r2_upload_path or os.environ["R2_UPLOAD_PATH"]
-    bucket_domain = opts.r2_domain or os.environ["R2_DOMAIN"]
-    access_key_id = opts.r2_access_key_id or os.environ["R2_ACCESS_KEY_ID"]
-    secret_access_key = opts.r2_secret_access_key or os.environ["R2_SECRET_ACCESS_KEY"]
-    bucket_endpoint = opts.r2_endpoint or os.environ["R2_ENDPOINT"]
+    bucket_name = opts.r2_bucket_name or os.getenv("R2_BUCKET_NAME")
+    base_upload_path = opts.r2_upload_path or os.getenv("R2_UPLOAD_PATH")
+    bucket_domain = opts.r2_domain or os.getenv("R2_DOMAIN")
+    access_key_id = opts.r2_access_key_id or os.getenv("R2_ACCESS_KEY_ID")
+    secret_access_key = opts.r2_secret_access_key or os.getenv("R2_SECRET_ACCESS_KEY")
+    bucket_endpoint = opts.r2_endpoint or os.getenv("R2_ENDPOINT")
 
     r2 = R2Client(
         access_key=access_key_id,
@@ -118,7 +118,7 @@ def generate_sha256_file(file_path):
         for byte_block in iter(lambda: file.read(4096), b""):
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
-    
+
 def format_slack_message(
     image_url: str,
     prompt_url: str,
@@ -154,7 +154,7 @@ def format_slack_message(
 						}
 					]
 				},
-                
+
 				{
 					"type": "rich_text_section",
 					"elements": [
@@ -192,5 +192,5 @@ def send_slack_message(payload: dict, webhook_url: Optional[str] = None):
     result = requests.post(webhook_url, json=payload)
     print(f"💬 [R2BucketUpload] Slack response: {result.text}")
     return result
-    
+
 script_callbacks.on_image_saved(postprocess)
